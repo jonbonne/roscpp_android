@@ -8,10 +8,10 @@ set -e
 # system.
 export PARALLEL_JOBS=$(nproc)
 
-if [[ -f /opt/ros/indigo/setup.bash ]] ; then
-    source /opt/ros/indigo/setup.bash
+if [[ -f /opt/hmi/presto/setup.bash ]] ; then
+    source /opt/hmi/presto/setup.bash
 else
-    echo "ROS environment not found, please install it"
+    echo "Presto! environment not found, please install it"
     exit 1
 fi
 
@@ -84,8 +84,8 @@ if [ -z $ANDROID_NDK ] ; then
     die "ANDROID_NDK ENVIRONMENT NOT FOUND!"
 fi
 
-if [ -z $ROS_DISTRO ] ; then
-    die "HOST ROS ENVIRONMENT NOT FOUND! Did you source /opt/ros/indigo/setup.bash"
+if [ -z $PRESTO_HOME -a -z $PRESTO_PATH ] ; then
+    die "HOST PRESTO ENVIRONMENT VARIABLES NOT FOUND! Did you set PRESTO_HOME and PRESTO_PATH and source /opt/hmi/presto/setup.bash"
 fi
 
 [ -d $standalone_toolchain_path ] || run_cmd setup_standalone_toolchain
@@ -111,18 +111,26 @@ fi
 
 export RBA_TOOLCHAIN=$prefix/android.toolchain.cmake
 
+# TODO: need android ports of the following for ament/presto:
+# cppcheck, cmake, libpoco-dev, libpocofoundation9v5, libpocofoundation9v5-dbg 
+# python-empy, python3-dev, python3-empy, python3-nose, python3-pip, python3-setuptools
+# python3-vcstool
+
+# TODO: get the following for testing
+# clang-format, pydocstyle, pyflakes, python3-coverage, python3-mock, python3-pep8, uncrustify
+
 # Now get boost with a specialized build
 [ -d $prefix/libs/boost ] || run_cmd get_library boost $prefix/libs
-[ -d $prefix/libs/bzip2 ] || run_cmd get_library bzip2 $prefix/libs
-[ -d $prefix/libs/uuid ] || run_cmd get_library uuid $prefix/libs
+#[ -d $prefix/libs/bzip2 ] || run_cmd get_library bzip2 $prefix/libs
+#[ -d $prefix/libs/uuid ] || run_cmd get_library uuid $prefix/libs
 [ -d $prefix/libs/poco-1.6.1 ] || run_cmd get_library poco $prefix/libs
 [ -d $prefix/libs/tinyxml ] || run_cmd get_library tinyxml $prefix/libs
-[ -d $prefix/libs/catkin ] || run_cmd get_library catkin $prefix/libs
-[ -d $prefix/libs/console_bridge ] || run_cmd get_library console_bridge $prefix/libs
-[ -d $prefix/libs/lz4-r124 ] || run_cmd get_library lz4 $prefix/libs
+#[ -d $prefix/libs/catkin ] || run_cmd get_library catkin $prefix/libs
+#[ -d $prefix/libs/console_bridge ] || run_cmd get_library console_bridge $prefix/libs
+#[ -d $prefix/libs/lz4-r124 ] || run_cmd get_library lz4 $prefix/libs
 [ -d $prefix/libs/curl-7.39.0 ] || run_cmd get_library curl $prefix/libs
-[ -d $prefix/libs/urdfdom/ ] || run_cmd get_library urdfdom $prefix/libs
-[ -d $prefix/libs/urdfdom_headers ] || run_cmd get_library urdfdom_headers $prefix/libs
+#[ -d $prefix/libs/urdfdom/ ] || run_cmd get_library urdfdom $prefix/libs
+#[ -d $prefix/libs/urdfdom_headers ] || run_cmd get_library urdfdom_headers $prefix/libs
 [ -d $prefix/libs/libiconv-1.14 ] || run_cmd get_library libiconv $prefix/libs
 [ -d $prefix/libs/libxml2-2.9.1 ] || run_cmd get_library libxml2 $prefix/libs
 [ -d $prefix/libs/collada-dom-2.4.0 ] || run_cmd get_library collada_dom $prefix/libs
